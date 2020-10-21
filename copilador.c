@@ -9,7 +9,26 @@
 */
 
 #include <stdio.h>
+#include <string.h>
+#include <sys/types.h>
+#include <unistd.h>
+int cria_processo(){
+	return 0;
+}
+int executacomando(){
+	return 0;
+}
 int main(){
-    printf("teste");
-    retun 0;
+    int loop = 1;
+	char comando[512] = "";
+	do{	
+		printf("meu-shell> ");
+		fflush(stdin);
+		gets(comando);
+    	if(strcmp (comando, "exit") == 0 ){
+    		print("teste");
+    		return 0;
+		}
+	}while(loop != 0);
+    return 0;
 }
