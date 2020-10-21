@@ -8,8 +8,4 @@
           6010 JOAO VITOR AZEVEDO     
 */
 
-#include <stdio.h>
-int main(){
-    printf("teste");
-    retun 0;
-}
+ESSE E UM ARQUIVO DE INSTRUCOES :)
