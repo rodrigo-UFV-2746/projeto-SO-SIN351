@@ -26,7 +26,7 @@ int main(){
 		fflush(stdin);
 		gets(comando);
     	if(strcmp (comando, "exit") == 0 ){
-    		print("teste");
+    		print("teste do Joao");
     		return 0;
 		}
 	}while(loop != 0);
