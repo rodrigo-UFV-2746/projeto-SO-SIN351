@@ -1,5 +1,5 @@
 /*
-  UNIVERSIDADE FEDERAL DE VISOCA - CAMPUS RIO PARANAIBA
+  UNIVERSIDADE FEDERAL DE VIÇOSA - CAMPUS RIO PARANAIBA
   PER 2020-4 PERIODO ESPECIAL REMOTO
   SIN 351 SISTEMAS OPERACIONAL
   PROFESSOR: RODRIGO MOREIRA
@@ -26,7 +26,7 @@ int main(){
 		fflush(stdin);
 		gets(comando);
     	if(strcmp (comando, "exit") == 0 ){
-    		print("teste");
+    		print("teste do Joao");
     		return 0;
 		}
 	}while(loop != 0);
