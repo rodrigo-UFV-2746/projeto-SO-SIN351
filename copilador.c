@@ -26,23 +26,23 @@ void executa_comando();
 int main()
 {
 	int loop = 1;
-	char linha[513] = "";
-	char *argumentos[64];
+	char linha[512];
+	char *argumentos[512];
 	char *dir = (char*) calloc(1024, sizeof(char));
 	system("clear");
 	do
 	{
 		getcwd(dir, 1024);
-		printf("meu-shell:%s$ ", dir);
+		printf("meu@shell:%s$ ", dir);
 		fflush(stdin);
 		gets(linha);
+		
 		if (strcmp(linha, "exit") == 0)
-		{
-			return 0;
-		}
+			exit(EXIT_SUCCESS);
+		
 		tratar_linha(linha, argumentos);
 		executa_comando(argumentos);
-
+	
 	} while (loop != 0);
 	return 0;
 }
@@ -92,10 +92,14 @@ void remove_espaco_desnecessario(char *str)
 
 void verifica_erro(char *comando)
 {
+	if (errno == EEXIST){
+		printf("%s: comando existe\n", comando);
+	}
 	if (errno == ENOENT)
 	{
-		printf("%s: comando não é do pão\n", comando);
+		printf("%s: diretório ou comando inválido\n", comando);
 	}
+	exit(EXIT_FAILURE);
 }
 
 void executa_comando(char **argumentos)
