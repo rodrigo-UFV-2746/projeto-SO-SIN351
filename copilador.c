@@ -25,9 +25,11 @@ void executa_comando();
 
 int main()
 {
-	int loop = 1;
+	int loop = 1, i = 0;
 	char linha[512];
-	char *argumentos[512];
+	char **argumentos = (char**) malloc(sizeof(char*) * 512);
+	for(i = 0; i < 512; i++)
+		argumentos[i] = (char*) malloc(sizeof(char) * 512);
 	char *dir = (char*) calloc(1024, sizeof(char));
 	system("clear");
 	do
@@ -48,24 +50,21 @@ int main()
 void tratar_linha(char *linha, char **argumentos)
 {
 	//esta função irá separar a string char *linha em substrings que são armazenadas em char **argumentos
+	
+	remove_espaco_desnecessario(linha);
 	int i = 0;
 
-	remove_espaco_desnecessario(linha);
+	char *rest = NULL;
+	char *token;
 
-	//esta string auxiliar é criada pq a função strtok alteraria a string original
-	char aux_linha[strlen(linha) + 1];
-	strcpy(aux_linha, linha);
+	token = strtok_r(linha, " ", &rest);
 
-	char *ptr = strtok(aux_linha, " ");
-	//cada posição de argumentos[i] receberá uma substring de char *linha
-	while (ptr != NULL)
-	{
-		argumentos[i] = ptr;
-		//printf("'%s'\n", ptr);
-		ptr = strtok(NULL, " ");
+	while(token != NULL){
+		argumentos[i] = token;
+		//printf("token: %s\n", token);
+		token = strtok_r(NULL, " ", &rest);
 		i++;
 	}
-	//o último elemento de char **argumentos é NULL para ficar de acordo com o exigido pela função execvp
 	argumentos[i] = NULL;
 }
 
@@ -125,8 +124,9 @@ void executa_comando(char **argumentos)
 			printf("arg[%d]: '%s'\n", i, argumentos[i]);
 			i++;
 		}
-		//printf("\nfilho executando, pid: %d\n", getpid());
+		
 		execvp(argumentos[0], argumentos);
+		
 		//verifica erros
 		verifica_erro(argumentos[0]);
 	}
