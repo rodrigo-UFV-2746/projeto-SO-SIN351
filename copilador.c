@@ -26,23 +26,23 @@ void executa_comando();
 int main()
 {
 	int loop = 1;
-	char linha[513] = "";
-	char *argumentos[64];
-	char *dir = (char *)calloc(1024, sizeof(char));
+	char linha[512];
+	char *argumentos[512];
+	char *dir = (char*) calloc(1024, sizeof(char));
 	system("clear");
 	do
 	{
 		getcwd(dir, 1024);
-		printf("meu-shell:%s$ ", dir);
+		printf("meu@shell:%s$ ", dir);
 		fflush(stdin);
 		gets(linha);
+		
 		if (strcmp(linha, "exit") == 0)
-		{
-			return 0;
-		}
+			exit(EXIT_SUCCESS);
+		
 		tratar_linha(linha, argumentos);
 		executa_comando(argumentos);
-
+	
 	} while (loop != 0);
 	return 0;
 }
@@ -230,4 +230,5 @@ void verifica_erro(char *comando)
 	{
 		printf("%s: EPERM  A  capability -dumb   applications  would  not  obtain  the  full  set of permitted capabilities granted by the executable file.  See capabilities(7).\n", comando);
 	}
+  exit(EXIT_FAILURE);
 }
