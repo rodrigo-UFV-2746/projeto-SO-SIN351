@@ -34,12 +34,8 @@ int main()
 	{
 		getcwd(dir, 1024);
 		printf("meu@shell:%s$ ", dir);
-		fflush(stdin);
 		gets(linha);
-		
-		if (strcmp(linha, "exit") == 0)
-			exit(EXIT_SUCCESS);
-		
+		fflush(stdin);
 		tratar_linha(linha, argumentos);
 		executa_comando(argumentos);
 	
@@ -92,7 +88,28 @@ void remove_espaco_desnecessario(char *str)
 
 void executa_comando(char **argumentos)
 {
+	//interpreta o comando "quit" como uma tentatia de saída
+	if (strcmp(argumentos[0], "quit") == 0)
+		exit(EXIT_SUCCESS);
+
+	//tenta mudar de diretório ao ler o comando "cd"
+	if (strcmp(argumentos[0], "cd") == 0){
+		//trata a tentativa de ir para o diretório pai
+		if(strcmp(argumentos[1], "..") == 0){
+			if(chdir("..") != 0)
+				printf("bash: cd: %s: Arquivo ou diretório não encontrado\n", argumentos[1]);
+		}else
+		//trata a tentativa de ir para um diretório qualquer
+			if(chdir(argumentos[1]) != 0)
+			printf("bash: cd: %s: Arquivo ou diretório não encontrado\n", argumentos[1]);
+
+		return;
+	}
+			
+	
+
 	pid_t pid;
+	int i = 0;
 
 	//se fork() não conseguir criar um processo
 	if ((pid = fork()) < 0)
@@ -104,6 +121,10 @@ void executa_comando(char **argumentos)
 	//este bloco será executado pelo processo FILHO
 	if (pid == 0)
 	{
+		while(argumentos[i] != NULL){
+			printf("arg[%d]: '%s'\n", i, argumentos[i]);
+			i++;
+		}
 		//printf("\nfilho executando, pid: %d\n", getpid());
 		execvp(argumentos[0], argumentos);
 		//verifica erros
