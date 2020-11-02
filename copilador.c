@@ -90,18 +90,6 @@ void remove_espaco_desnecessario(char *str)
 	}
 }
 
-void verifica_erro(char *comando)
-{
-	if (errno == EEXIST){
-		printf("%s: comando existe\n", comando);
-	}
-	if (errno == ENOENT)
-	{
-		printf("%s: diretório ou comando inválido\n", comando);
-	}
-	exit(EXIT_FAILURE);
-}
-
 void executa_comando(char **argumentos)
 {
 	pid_t pid;
@@ -118,7 +106,6 @@ void executa_comando(char **argumentos)
 	{
 		//printf("\nfilho executando, pid: %d\n", getpid());
 		execvp(argumentos[0], argumentos);
-
 		//verifica erros
 		verifica_erro(argumentos[0]);
 	}
@@ -144,73 +131,104 @@ void executa_comando(char **argumentos)
 		//exit(EXIT_SUCCESS);
 	}
 }
-
-/*
-{		E2BIG  The total number of bytes in the environment (envp) and argument list (argv) is too
-              large.
-
-       EACCES Search  permission  is  denied on a component of the path prefix of pathname or the
-              name of a script interpreter.  (See also path_resolution(7).)
-
-       EACCES The file or a script interpreter is not a regular file.
-
-       EACCES Execute permission is denied for the file or a script or ELF interpreter.
-
-       EACCES The filesystem is mounted noexec.
-
-       EAGAIN (since Linux 3.1)
-              Having changed its real UID using one of the set*uid() calls, the caller was—and is
-              now  still—above  its  RLIMIT_NPROC  resource limit (see setrlimit(2)).  For a more
-              detailed explanation of this error, see NOTES.
-
-       EFAULT pathname or one of the pointers in the vectors argv or  envp  points  outside  your
-              accessible address space.
-
-       EINVAL An  ELF  executable  had  more than one PT_INTERP segment (i.e., tried to name more
-              than one interpreter).
-
-       EIO    An I/O error occurred.
-
-       EISDIR An ELF interpreter was a directory.
-
-       ELIBBAD
-              An ELF interpreter was not in a recognized format.
-
-       ELOOP  Too many symbolic links were encountered in resolving pathname or  the  name  of  a
-              script or ELF interpreter.
-
-       ELOOP  The maximum recursion limit was reached during recursive script interpretation (see
-              "Interpreter scripts", above).  Before Linux 3.8, the error produced for this  case
-              was ENOEXEC.
-
-       EMFILE The per-process limit on the number of open file descriptors has been reached.
-
-       ENAMETOOLONG
-              pathname is too long.
-
-       ENFILE The system-wide limit on the total number of open files has been reached.
-
-       ENOENT The file pathname or a script or ELF interpreter does not exist.
-
-       ENOEXEC
-              An  executable is not in a recognized format, is for the wrong architecture, or has
-              some other format error that means it cannot be executed.
-
-       ENOMEM Insufficient kernel memory was available.
-
-       ENOTDIR
-              A component of the path prefix of pathname or a script or ELF interpreter is not  a
-              directory.
-
-       EPERM  The  filesystem  is mounted nosuid, the user is not the superuser, and the file has
-              the set-user-ID or set-group-ID bit set.
-
-       EPERM  The process is being traced, the user is not the superuser and  the  file  has  the
-              set-user-ID or set-group-ID bit set.
-
-       EPERM  A  "capability-dumb"  applications  would  not  obtain  the  full  set of permitted
-              capabilities granted by the executable file.  See capabilities(7).
-
-       ETXTBSY
-              The specified executable was open for writing by one or more processes.}
-*/
+// função verifica erros colocado todos os erros da lista de erro da função execvp();
+void verifica_erro(char *comando)
+{   
+	if (errno == ENOENT)
+	{
+		printf("%s: comando não é do pão\n", comando);
+	}
+	if (errno == E2BIG)
+	{
+		printf("%s: E2BIG The total number of bytes in the environment (envp) and argument list (argv) is toolarge.\n", comando);
+	}
+	if (errno == EACCES)
+	{
+		printf("%s:EACCES Search  permission  is  denied on a component of the path prefix of pathname or the name of a script interpreter.  (See also path_resolution(7).)\n", comando);
+	}
+	if (errno == EACCES)
+	{
+		printf("%s: EACCES The file or a script interpreter is not a regular file.\n", comando);
+	}
+	if (errno == EACCES)
+	{
+		printf("%s: EACCES Execute permission is denied for the file or a script or ELF interpreter.\n", comando);
+	}
+	if (errno == EACCES)
+	{
+		printf("%s: EACCES The filesystem is mounted noexec.\n", comando);
+	}
+	if (errno == EAGAIN)
+	{
+		printf("%s: EAGAIN (since Linux 3.1) Having changed its real UID using one of the set*uid() calls, the caller was—and is now  still—above  its  RLIMIT_NPROC  resource limit (see setrlimit(2)).  For a more detailed explanation of this error, see NOTES..\n", comando);
+	}
+	if (errno == EFAULT)
+	{
+		printf("%s: EFAULT pathname or one of the pointers in the vectors argv or  envp  points  outside  your accessible address space.\n", comando);
+	}
+	if (errno == EINVAL)
+	{
+		printf("%s: EINVAL An  ELF  executable  had  more than one PT_INTERP segment (i.e., tried to name more than one interpreter).\n", comando);
+	}
+	if (errno == EIO)
+	{
+		printf("%s:EIO    An I/O error occurred.\n", comando);
+	}
+	if (errno == EISDIR)
+	{
+		printf("%s:EISDIR An ELF interpreter was a directory.\n", comando);
+	}
+	if (errno == ELIBBAD)
+	{
+		printf("%s:ELIBBAD An ELF interpreter was not in a recognized format.\n", comando);
+	}
+	if (errno == ELOOP)
+	{
+		printf("%s:ELOOP  Too many symbolic links were encountered in resolving pathname or  the  name  of  a script or ELF interpreter.\n", comando);
+	}
+	if (errno == ELOOP)
+	{
+		printf("%s:The maximum recursion limit was reached during recursive script interpretation (see Interpreter scripts , above).  Before Linux 3.8, the error produced for this  case was ENOEXEC.\n", comando);
+	}
+	if (errno == EMFILE)
+	{
+		printf("%s:EMFILE The per-process limit on the number of open file descriptors has been reached.\n", comando);
+	}
+	if (errno == ENAMETOOLONG)
+	{
+		printf("%s:ENAMETOOLONG pathname is too long.\n", comando);
+	}
+	if (errno == ENFILE)
+	{
+		printf("%s:ENFILE The system-wide limit on the total number of open files has been reached.\n",comando);
+	}
+	if (errno == ENOEXEC)
+	{
+		printf("%s:ENOEXEC An  executable is not in a recognized format, is for the wrong architecture, or has some other format error that means it cannot be executed.\n", comando);
+	}
+	if (errno == ELIBBAD)
+	{
+		printf("%s:ELIBBAD An ELF interpreter was not in a recognized format.\n", comando);
+	}
+	if (errno == ENOMEM)
+	{
+		printf("%s:ENOMEM Insufficient kernel memory was available.\n", comando);
+	}
+	if (errno == ENOTDIR)
+	{
+		printf("%s:ENOTDIR A component of the path prefix of pathname or a script or ELF interpreter is not a directory.\n", comando);
+	}
+	if (errno == EPERM)
+	{
+		printf("%s:EPERM The filesystem is mounted nosuid, the user is not the superuser, and the file has the set - user - ID or set - group - ID bit set.\n", comando);
+	}
+	if (errno == EPERM)
+	{
+		printf("%s:EPERM The process is being traced, the user is not the superuser and the file has the set - user - ID or set - group - ID bit set.\n", comando);
+	}
+	if (errno == EPERM)
+	{
+		printf("%s: EPERM  A  capability -dumb   applications  would  not  obtain  the  full  set of permitted capabilities granted by the executable file.  See capabilities(7).\n", comando);
+	}
+  exit(EXIT_FAILURE);
+}
