@@ -5,7 +5,7 @@
   PROFESSOR: RODRIGO MOREIRA
   Trabalho Prático I: Construindo um Interpretador Shell
   ALUNOS: 2746 RODRIGO DE OLIVEIRA COSTA
-          6010 JOAO VITOR AZEVEDO     
+          6010 JOAO VITOR DE AZEVEDO     
 */
 
 #include <stdio.h>
