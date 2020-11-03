@@ -15,11 +15,13 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-
+void separapipe(char *linha, char **aux);
+int calcula_virgulas(char *linha);
 void tratar_linha(char *linha, char **argumentos);
 void remove_espaco_desnecessario(char *str);
 void verifica_erro(char *comando);
 void executa_comando();
+void executa_pipe(char **pipe,int qv);
 
 //============================== MAIN ================================
 
@@ -27,10 +29,10 @@ int main()
 {
 	int loop = 1, i = 0;
 	char linha[512];
-	char **argumentos = (char**) malloc(sizeof(char*) * 512);
-	for(i = 0; i < 512; i++)
-		argumentos[i] = (char*) malloc(sizeof(char) * 512);
-	char *dir = (char*) calloc(1024, sizeof(char));
+	char **argumentos = (char **)malloc(sizeof(char *) * 512);
+	for (i = 0; i < 512; i++)
+		argumentos[i] = (char *)malloc(sizeof(char) * 512);
+	char *dir = (char *)calloc(1024, sizeof(char));
 	system("clear");
 	do
 	{
@@ -38,19 +40,68 @@ int main()
 		printf("meu@shell:%s$ ", dir);
 		gets(linha);
 		fflush(stdin);
-		tratar_linha(linha, argumentos);
-		executa_comando(argumentos);
-	
+		int qv;
+		qv = calcula_virgulas(linha);
+		if (qv == 0)
+		{
+			tratar_linha(linha, argumentos);
+			executa_comando(argumentos);
+		}
+		else
+		{	char **pipe	 = (char **)malloc(sizeof(char *) * qv+1);
+				for (i = 0; i < 512; i++)
+					pipe[i] = (char *)malloc(sizeof(char) * 512);;
+			printf("fazer o pipe \n");
+			char *token = strtok(linha, ",");
+			int i =0;
+			while (token != NULL)
+			{
+				strcpy(pipe[i],token);
+				token = strtok(NULL, ",");
+				i++;
+			}
+
+			executa_pipe(pipe,qv);
+		}
+
 	} while (loop != 0);
 	return 0;
 }
 
 //============================== MAIN ================================
+void executa_pipe(char **pipe ,int qv){
+	int i=0;
+	for(i=0;i<qv+1;i++){
+		puts(pipe[i]);
+	}
+	char **arg = (char **)malloc(sizeof(char *) * 512);
+	for (i = 0; i < 512; i++)
+		arg[i] = (char *)malloc(sizeof(char) * 512);
+    for(i=0;i<=qv;i++){
+		tratar_linha(pipe[i], arg);
+		executa_comando(arg);
+	}
 
+
+}
+
+int calcula_virgulas(char *linha)
+{
+	int qv = 0, i = 0;
+	while (linha[i] != '\0')
+	{
+		if (linha[i] == ',')
+		{
+			qv++;
+		}
+		i++;
+	}
+	return qv;
+}
 void tratar_linha(char *linha, char **argumentos)
 {
 	//esta função irá separar a string char *linha em substrings que são armazenadas em char **argumentos
-	
+
 	remove_espaco_desnecessario(linha);
 	int i = 0;
 
@@ -59,7 +110,8 @@ void tratar_linha(char *linha, char **argumentos)
 
 	token = strtok_r(linha, " ", &rest);
 
-	while(token != NULL){
+	while (token != NULL)
+	{
 		argumentos[i] = token;
 		//printf("token: %s\n", token);
 		token = strtok_r(NULL, " ", &rest);
@@ -92,20 +144,21 @@ void executa_comando(char **argumentos)
 		exit(EXIT_SUCCESS);
 
 	//tenta mudar de diretório ao ler o comando "cd"
-	if (strcmp(argumentos[0], "cd") == 0){
+	if (strcmp(argumentos[0], "cd") == 0)
+	{
 		//trata a tentativa de ir para o diretório pai
-		if(strcmp(argumentos[1], "..") == 0){
-			if(chdir("..") != 0)
+		if (strcmp(argumentos[1], "..") == 0)
+		{
+			if (chdir("..") != 0)
 				printf("bash: cd: %s: Arquivo ou diretório não encontrado\n", argumentos[1]);
-		}else
-		//trata a tentativa de ir para um diretório qualquer
-			if(chdir(argumentos[1]) != 0)
+		}
+		else
+			//trata a tentativa de ir para um diretório qualquer
+			if (chdir(argumentos[1]) != 0)
 			printf("bash: cd: %s: Arquivo ou diretório não encontrado\n", argumentos[1]);
 
 		return;
 	}
-			
-	
 
 	pid_t pid;
 	int i = 0;
@@ -120,13 +173,14 @@ void executa_comando(char **argumentos)
 	//este bloco será executado pelo processo FILHO
 	if (pid == 0)
 	{
-		while(argumentos[i] != NULL){
+		while (argumentos[i] != NULL)
+		{
 			printf("arg[%d]: '%s'\n", i, argumentos[i]);
 			i++;
 		}
-		
+
 		execvp(argumentos[0], argumentos);
-		
+
 		//verifica erros
 		verifica_erro(argumentos[0]);
 	}
@@ -154,7 +208,7 @@ void executa_comando(char **argumentos)
 }
 // função verifica erros colocado todos os erros da lista de erro da função execvp();
 void verifica_erro(char *comando)
-{   
+{
 	if (errno == ENOENT)
 	{
 		printf("%s: comando não é do pão\n", comando);
@@ -221,7 +275,7 @@ void verifica_erro(char *comando)
 	}
 	if (errno == ENFILE)
 	{
-		printf("%s:ENFILE The system-wide limit on the total number of open files has been reached.\n",comando);
+		printf("%s:ENFILE The system-wide limit on the total number of open files has been reached.\n", comando);
 	}
 	if (errno == ENOEXEC)
 	{
@@ -251,5 +305,5 @@ void verifica_erro(char *comando)
 	{
 		printf("%s: EPERM  A  capability -dumb   applications  would  not  obtain  the  full  set of permitted capabilities granted by the executable file.  See capabilities(7).\n", comando);
 	}
-  exit(EXIT_FAILURE);
+	exit(EXIT_FAILURE);
 }
