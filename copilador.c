@@ -26,7 +26,7 @@ void verifica_erro(char *comando);
 void executa_comando(char **argumentos, int num_comandos, int num_comandos_restantes, int *pipe);
 void executa_comando_pipe(char **argumentos_pipe, int qnt_virgulas);
 
-//========================void====== MAIN ================================
+//============================== MAIN ================================
 
 int main()
 {
