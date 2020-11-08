@@ -19,5 +19,27 @@ OBS.:
 TRABALHO DISPONIVEL NO LINK A SEGUIR:
     https://github.com/rodrigo-UFV-2746/projeto-SO-SIN351.git
 
-COMANDOS TESTADOS
+COMANDOS TESTADOS:
+cd ..
+cd projeto-SO-SIN351
+cat README.txt
+nano README.txt
+nano help
+cat README.txt, grep 2746
+,,cat README.txt
+quit  *obs finaliza o programa
+poweroff *obs o computador desliga e bom salvar as coisas antes desse comando.
+mkdir pasta_teste
+rm -r pasta_teste
+ls
+ls -l
+date
+uptime
+ifconfig
+ping 8.8.8.8
+du 
+netstat
+
+
+
 
