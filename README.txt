@@ -18,3 +18,6 @@ OBS.:
 
 TRABALHO DISPONIVEL NO LINK A SEGUIR:
     https://github.com/rodrigo-UFV-2746/projeto-SO-SIN351.git
+
+COMANDOS TESTADOS
+
