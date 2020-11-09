@@ -39,7 +39,7 @@ ifconfig
 ping 8.8.8.8
 du 
 netstat
-
-
-
-
+lslogins , grep root
+pwd
+ls , wc -l
+ls -l / , wc -l
